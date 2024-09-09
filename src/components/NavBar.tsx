@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-const  NavBar = () => {
+const NavBar: React.FC = () => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand navbar-dark bg-dark">
       <Link className="navbar-brand ms-4" to={"/"}>Malthe Winje</Link>
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
@@ -16,7 +16,8 @@ const  NavBar = () => {
         </ul>
       </div>
     </nav>
-  )
+  );
 }
 
 export default NavBar;
+

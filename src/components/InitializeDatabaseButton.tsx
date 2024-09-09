@@ -1,26 +1,26 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import DEVICE_ENTITY_DATA from '../data/DEVICE_ENTITY_DATA';
 
 function InitializeDatabaseButton() {
-  const [connected, setConnected] = useState<boolean>(false)
-  const [errorDB, setErrorDB] = useState<boolean>(false)
+  const [connected, setConnected] = useState<boolean>(false);
+  const [errorDB, setErrorDB] = useState<boolean>(false);
 
   const initializeDatabase = () => {
     // Checks if IndexedDB is in Chrome 
-    // TODO implement support to multiple browse
+    // TODO implement support to multiple browsers
     const idb = window.indexedDB;
 
     // Try to open DB if not create
     const request = idb.open("malthewinje-db", 1);
 
     // Return error 
-    request.onerror = function (event) {
+    request.onerror = function (event: Event) {
       setErrorDB(true);
-      console.error("An error occurred with IndexedDB : ", event)
+      console.error("An error occurred with IndexedDB : ", event);
     };
 
     // Create IndexedDB if not present
-     request.onupgradeneeded = function (event) {
+    request.onupgradeneeded = function (event: IDBVersionChangeEvent) {
       console.log(event);
       const db = request.result;
 
@@ -33,10 +33,10 @@ function InitializeDatabaseButton() {
       setConnected(true);
 
       const db = request.result;
-      var tx = db.transaction("deviceEntity", "readwrite");
-      var deviceEntity = tx.objectStore("deviceEntity");
+      const tx = db.transaction("deviceEntity", "readwrite");
+      const deviceEntity = tx.objectStore("deviceEntity");
 
-      // Loop to add entries i Indexed Database
+      // Loop to add entries in Indexed Database
       const { name, serial_number, last_connection, status } = DEVICE_ENTITY_DATA;
       for (let index = 0; index < 200; index++) {
         deviceEntity.add({
@@ -44,7 +44,7 @@ function InitializeDatabaseButton() {
           serial_number: `${serial_number + index}`,
           last_connection,
           status
-        })
+        });
       }
 
       return tx.oncomplete;
@@ -59,7 +59,8 @@ function InitializeDatabaseButton() {
       {errorDB && <p className='alert alert-danger mt-3'>An error occurred with IndexedDB</p>}
       {connected && <p className='alert alert-success mt-3'>Database opened successfully</p>}
     </>
-  )
+  );
 }
 
 export default InitializeDatabaseButton;
+

@@ -4,23 +4,21 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 import Page2 from './Page2';
-import NavBar from './components/NavBar';
 
 const router = createBrowserRouter([
   
   {
     path: "/",
-    element: [<NavBar/>, <App />],
+    element: <App />,
   },
   {
     path: "/page2",
-    element: [<NavBar/>,<Page2 />],
+    element: <Page2 />,
   },
 ]);
 
