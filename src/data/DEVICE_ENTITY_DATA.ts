@@ -1,12 +1,6 @@
-interface DeviceEntity {
-  name: string;
-  serial_number: number;
-  last_connection: Date;
-  status: boolean;
-}
+import { Device } from "../utils/deviceType";
 
-
-const DEVICE_ENTITY_DATA : DeviceEntity = {
+const DEVICE_ENTITY_DATA : Device = {
   name: "Device",
   serial_number: 123456789,
   last_connection: new Date(),

@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import DEVICE_ENTITY_DATA from '../data/DEVICE_ENTITY_DATA';
+import { Device } from '../utils/deviceType';
 
 function InitializeDatabaseButton() {
   const [connected, setConnected] = useState<boolean>(false);
   const [errorDB, setErrorDB] = useState<boolean>(false);
+  const [deviceList, setDeviceList] = useState<Device[]>([]);
+
 
   const initializeDatabase = () => {
-    // Checks if IndexedDB is in Chrome 
-    // TODO implement support to multiple browsers
+    // Checks if IndexedDB is in Chrome...needs support to more browser
     const idb = window.indexedDB;
 
     // Try to open DB if not create
@@ -21,9 +23,7 @@ function InitializeDatabaseButton() {
 
     // Create IndexedDB if not present
     request.onupgradeneeded = function (event: IDBVersionChangeEvent) {
-      console.log(event);
       const db = request.result;
-
       if (!db.objectStoreNames.contains("deviceEntity")) {
         const objectStore = db.createObjectStore("deviceEntity", { keyPath: "id", autoIncrement: true });
       }
@@ -31,7 +31,6 @@ function InitializeDatabaseButton() {
 
     request.onsuccess = function () {
       setConnected(true);
-
       const db = request.result;
       const tx = db.transaction("deviceEntity", "readwrite");
       const deviceEntity = tx.objectStore("deviceEntity");
@@ -46,6 +45,7 @@ function InitializeDatabaseButton() {
           status
         });
       }
+      const deviceListRequest = deviceEntity.getAll();
 
       return tx.oncomplete;
     };

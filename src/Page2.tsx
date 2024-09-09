@@ -1,28 +1,34 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import ListDevices from './components/ListDevices';
-import NavBar from './components/NavBar';
-
+import { Device } from './utils/deviceType';
 
 function Page2() {
-  const [deviceList, setDeviceList] = useState<[]>([]);
+  const [deviceList, setDeviceList] = useState<Device[]>([]);
+  const [filterStatus, setFilterStatus] = useState<boolean>(false);
+  const [editDeviceById, setEditDeviceById] = useState<number>(0);
+  const [deviceEditStatus, setDeviceEditStatus] = useState<Device>({
+    id: 0,
+    name: "",
+    serial_number: 0,
+    last_connection: "",
+    status: false
+  });
 
+  // Get all devices in IndexedDB
   const getAllData = () => {
     const idb = window.indexedDB;
     const dbPromise = idb.open("malthewinje-db", 1);
 
     dbPromise.onsuccess = () => {
       const db = dbPromise.result;
-
       const tx = db.transaction("deviceEntity", "readonly");
       const deviceEntity = tx.objectStore("deviceEntity");
       const deviceListRequest = deviceEntity.getAll();
 
       deviceListRequest.onsuccess = (event: Event) => {
-        const result = (event.target as IDBRequest<any>).result;
+        const result = (event.target as IDBRequest<Device[]>).result;
         setDeviceList(result);
       };
-
       tx.oncomplete = () => {
         db.close();
       };
@@ -33,15 +39,144 @@ function Page2() {
     getAllData();
   }, []);
 
+  // Makes row in table editable
+  const editDevice = (item: Device) => {
+    setEditDeviceById(Number(item.id));
+  };
+
+  // Save changes to indexedDB
+  const saveChanges = (item: Device) => {
+    const idb = window.indexedDB;
+    const dbPromise = idb.open("malthewinje-db", 1);
+
+    dbPromise.onsuccess = () => {
+      const db = dbPromise.result;
+      const tx = db.transaction("deviceEntity", "readwrite");
+      const deviceEntity = tx.objectStore("deviceEntity");
+
+      const selectedDevice = deviceEntity.put({
+        id: item?.id,
+        name: item.name,
+        serial_number: item.serial_number,
+        last_connection: item.last_connection,
+        status: deviceEditStatus.status,
+      });
+
+      selectedDevice.onsuccess = () => {
+        tx.oncomplete = function () {
+          db.close();
+        };
+        alert(`${item.name} is saved!`);
+        setEditDeviceById(0);
+        getAllData();
+      };
+    };
+  };
+
+  // Delete devices from indexedDB
+  const deleteDevice = (item: Device) => {
+    const idb = window.indexedDB;
+    const dbPromise = idb.open("malthewinje-db", 1);
+
+    dbPromise.onsuccess = function () {
+      const db = dbPromise.result;
+      const tx = db.transaction("deviceEntity", "readwrite");
+      const deviceEntity = tx.objectStore("deviceEntity");
+      const deleteUser = deviceEntity.delete(Number(item.id));
+      
+      deleteUser.onsuccess = () => {
+        tx.oncomplete = function () {
+          db.close();
+        };
+        alert(`${item.name} is deleted!`);
+        getAllData();
+      };
+    };
+  };
+
+  const limitInputLength = (e: React.ChangeEvent<HTMLInputElement>): boolean => {
+    return e.target.value.length >= 16;
+  };
+
+  // Filter array based on checkbox in status
+  const filteredArray: Device[] = deviceList.filter(item => item.status === filterStatus);
+
   return (
     <>
-    <NavBar />
-    <div className='container'>
       <h1>Page 2</h1>
-      {deviceList.length > 0 && 
-      <ListDevices devicesList={deviceList} />
-      }
-    </div>
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Serial Number</th>
+            <th scope="col">Last Connection</th>
+            <th scope="col">
+              Status
+              <input
+                className='ms-2'
+                type="checkbox"
+                defaultChecked={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.checked)}
+              />
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredArray.map((item: Device) => (
+            <tr key={item.serial_number}>
+              <td>{item.id}</td>
+              <td>
+                <input
+                  type='text'
+                  disabled={editDeviceById !== Number(item.id)}
+                  value={item.name}
+                  maxLength={32}
+                  onChange={(e) => {
+                    item.name = e.target.value;
+                    setDeviceEditStatus({ ...item, name: e.target.value });
+                  }}
+                />
+              </td>
+              <td>
+                <input
+                  type='number'
+                  disabled={editDeviceById !== Number(item.id)}
+                  value={item.serial_number}
+                  maxLength={16}
+                  autoFocus
+                  onChange={(e) => {
+                    if (limitInputLength(e)) return;
+                    item.serial_number = Number(e.target.value);
+                    setDeviceEditStatus({ ...item, serial_number: Number(e.target.value) });
+                  }}
+                />
+              </td>
+              <td>{item.last_connection.toString()}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  disabled={editDeviceById !== Number(item.id)}
+                  defaultChecked={item.status}
+                  onChange={(e) => setDeviceEditStatus({ ...item, status: e.target.checked })}
+                />
+              </td>
+              <td>
+                <button onClick={() => editDevice(item)} className='btn btn-secondary btn-sm me-2'>Edit</button>
+                <button
+                  disabled={editDeviceById !== Number(item.id)}
+                  onClick={() => saveChanges(item)}
+                  className='btn btn-success btn-sm me-2'
+                >
+                  Save
+                </button>
+                <button onClick={() => deleteDevice(item)} className='btn btn-danger btn-sm me-2'>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </>
   );
 }
