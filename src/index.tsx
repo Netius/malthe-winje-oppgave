@@ -3,20 +3,24 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 import Page2 from './Page2';
+import NavBar from './components/NavBar';
 
 const router = createBrowserRouter([
+  
   {
     path: "/",
-    element: <App />,
+    element: [<NavBar/>, <App />],
   },
   {
     path: "/page2",
-    element: <Page2 />,
+    element: [<NavBar/>,<Page2 />],
   },
 ]);
 
@@ -25,7 +29,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+     <RouterProvider router={router} />
   </React.StrictMode>
 );
 

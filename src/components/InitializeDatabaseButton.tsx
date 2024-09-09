@@ -55,9 +55,9 @@ function InitializeDatabaseButton() {
 
   return (
     <>
-      <button onClick={initializeDatabase}>Initialize database</button>
-      {errorDB && <p>An error occurred with IndexedDB</p>}
-      {connected && <p>Database opened successfully</p>}
+      <button className='btn btn-primary' onClick={initializeDatabase}>Initialize database</button>
+      {errorDB && <p className='alert alert-danger mt-3'>An error occurred with IndexedDB</p>}
+      {connected && <p className='alert alert-success mt-3'>Database opened successfully</p>}
     </>
   )
 }

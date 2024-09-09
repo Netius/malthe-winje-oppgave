@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom';
 
 function Page2() {
   return (
-    <div className='App'>
+    <div className='container'>
       <h1>Page 2</h1>
-      <Link to={"/"}>Home</Link>
     </div>
   )
 }
