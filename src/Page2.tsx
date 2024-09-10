@@ -18,7 +18,6 @@ function Page2() {
 
   // Get all devices in IndexedDB
   const getAllData = () => {
-    alert("GDASJH")
     const idb = window.indexedDB;
     const dbPromise = idb.open("malthewinje-db", 1);
 
@@ -67,10 +66,10 @@ function Page2() {
       const deviceEntity = tx.objectStore("deviceEntity");
 
       const selectedDevice = deviceEntity.put({
-        id: item?.id,
-        name: item.name,
-        serial_number: item.serial_number,
-        last_connection: item.last_connection,
+        id: deviceEditStatus.id,
+        name: deviceEditStatus.name,
+        serial_number: deviceEditStatus.serial_number,
+        last_connection: deviceEditStatus.last_connection,
         status: deviceEditStatus.status,
       });
 
@@ -106,13 +105,18 @@ function Page2() {
     };
   };
 
+ 
   const limitInputLength = (e: React.ChangeEvent<HTMLInputElement>): boolean => {
     return e.target.value.length >= 16;
   };
 
   // Filter array based on checkbox in status
-  const filteredArray: Device[] = deviceList.filter(item => item.status === filterStatus);
-
+  var filteredArray: Device [] = [];
+  if(filterStatus){
+     filteredArray = deviceList.filter(item => item.status === filterStatus);
+  } else{
+     filteredArray = deviceList;
+  }
   return (
     <>
       <h1>Page 2</h1>
@@ -128,7 +132,7 @@ function Page2() {
               <input
                 className='ms-2'
                 type="checkbox"
-                defaultChecked={filterStatus}
+                checked={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.checked)}
               />
             </th>
@@ -170,8 +174,12 @@ function Page2() {
                 <input
                   type="checkbox"
                   disabled={editDeviceById !== Number(item.id)}
-                  defaultChecked={item.status}
-                  onChange={(e) => setDeviceEditStatus({ ...item, status: e.target.checked })}
+                  checked={item.status}
+                  onChange={(e) => {
+                    item.status = e.target.checked;
+                    setDeviceEditStatus({ ...item, status: e.target.checked })
+
+                  }}
                 />
               </td>
               <td>

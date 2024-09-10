@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState } from 'react';
 import DEVICE_ENTITY_DATA from './data/DEVICE_ENTITY_DATA';
 import { Device } from './utils/deviceType';
