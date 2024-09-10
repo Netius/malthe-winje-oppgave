@@ -1,5 +1,5 @@
 import React from 'react';
-import { State } from '../App';
+import { State } from '../utils/deviceType';
 
 interface ChildProps {
   counterStatus: State;

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import DEVICE_ENTITY_DATA from './data/DEVICE_ENTITY_DATA';
+import { Device, Props } from './utils/deviceType';
 
-function Page1() {
+const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
   const [connected, setConnected] = useState<boolean>(false);
   const [errorDB, setErrorDB] = useState<boolean>(false);
 
@@ -40,8 +41,16 @@ function Page1() {
           serial_number: `${serial_number + index}`,
           last_connection,
           status
-        });
+        });   
       }
+      const deviceListRequest = deviceEntity.getAll();
+      deviceListRequest.onsuccess = (event: Event) => {
+        const result = (event.target as IDBRequest<Device[]>).result;
+        let activeCounterLength = result.filter(item => item.status === true).length
+        let inactiveCounterLength = result.filter(item => item.status === false).length
+        setCounterStatus({ activeCount: activeCounterLength, inactiveCount: inactiveCounterLength })
+    
+      };
       return tx.oncomplete;
     };
 

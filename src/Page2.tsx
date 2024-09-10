@@ -1,11 +1,7 @@
-import React, { useState, useEffect, useRef, Dispatch } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
-import { Device } from './utils/deviceType';
-import { State } from './App';
+import { Device, Props } from './utils/deviceType';
 
-type Props = {
-  setCounterStatus: React.Dispatch<React.SetStateAction<State>>;
-};
 
 const Page2: React.FC<Props> = ({ setCounterStatus }) => {
   const [deviceList, setDeviceList] = useState<Device[]>([]);
