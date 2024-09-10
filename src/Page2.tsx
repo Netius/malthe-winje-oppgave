@@ -14,8 +14,6 @@ function Page2() {
     status: false
   });
 
-  // const data = React.useContext(ContextData);
-
   // Get all devices in IndexedDB
   const getAllData = () => {
     const idb = window.indexedDB;
@@ -38,7 +36,7 @@ function Page2() {
   };
 
   const effectRan = useRef<boolean>(false);
-  // https://stackoverflow.com/questions/72238175/why-useeffect-running-twice-and-how-to-handle-it-well-in-react
+
   useEffect(() => {
     if (!effectRan.current) {
       getAllData();
@@ -47,8 +45,6 @@ function Page2() {
       effectRan.current = true;
     };
   }, []);
-
-
 
   // Makes row in table editable
   const editDevice = (item: Device) => {
@@ -105,21 +101,17 @@ function Page2() {
     };
   };
 
- 
   const limitInputLength = (e: React.ChangeEvent<HTMLInputElement>): boolean => {
     return e.target.value.length >= 16;
   };
 
   // Filter array based on checkbox in status
-  var filteredArray: Device [] = [];
-  if(filterStatus){
-     filteredArray = deviceList.filter(item => item.status === filterStatus);
-  } else{
-     filteredArray = deviceList;
-  }
+  console.log(filterStatus, editDeviceById >= 0);
+  const filteredArray: Device[] = filterStatus ? deviceList.filter(item => item.status === filterStatus) : deviceList;
+
   return (
     <>
-      <h1>Page 2</h1>
+      <h1>Page 2</h1> {editDeviceById}
       <table className="table">
         <thead>
           <tr>
@@ -178,17 +170,20 @@ function Page2() {
                   onChange={(e) => {
                     item.status = e.target.checked;
                     setDeviceEditStatus({ ...item, status: e.target.checked })
-
                   }}
                 />
               </td>
               <td>
-                <button onClick={() => editDevice(item)} className='btn btn-secondary btn-sm me-2'>Edit</button>
+                <button
+                  disabled={editDeviceById !== 0}
+                  onClick={() => editDevice(item)}
+                  className='btn btn-primary btn-sm me-2'>
+                  Edit
+                </button>
                 <button
                   disabled={editDeviceById !== Number(item.id)}
                   onClick={() => saveChanges(item)}
-                  className='btn btn-success btn-sm me-2'
-                >
+                  className='btn btn-success btn-sm me-2'>
                   Save
                 </button>
                 <button onClick={() => deleteDevice(item)} className='btn btn-danger btn-sm me-2'>Delete</button>
