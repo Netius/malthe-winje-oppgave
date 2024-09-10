@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { Device } from './utils/deviceType';
 
@@ -14,8 +14,11 @@ function Page2() {
     status: false
   });
 
+  // const data = React.useContext(ContextData);
+
   // Get all devices in IndexedDB
   const getAllData = () => {
+    alert("GDASJH")
     const idb = window.indexedDB;
     const dbPromise = idb.open("malthewinje-db", 1);
 
@@ -35,9 +38,18 @@ function Page2() {
     };
   };
 
+  const effectRan = useRef<boolean>(false);
+  // https://stackoverflow.com/questions/72238175/why-useeffect-running-twice-and-how-to-handle-it-well-in-react
   useEffect(() => {
-    getAllData();
+    if (!effectRan.current) {
+      getAllData();
+    }
+    return () => {
+      effectRan.current = true;
+    };
   }, []);
+
+
 
   // Makes row in table editable
   const editDevice = (item: Device) => {
@@ -83,7 +95,7 @@ function Page2() {
       const tx = db.transaction("deviceEntity", "readwrite");
       const deviceEntity = tx.objectStore("deviceEntity");
       const deleteUser = deviceEntity.delete(Number(item.id));
-      
+
       deleteUser.onsuccess = () => {
         tx.oncomplete = function () {
           db.close();

@@ -13,17 +13,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-     <BrowserRouter>
-      <div className="App">
-        <NavBar />
-        <div className='container'>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/page2" element={<Page2 />} />
-        </Routes>
-        </div>
-      </div>
-    </BrowserRouter>
+     <App />
   </React.StrictMode>
 );
 
