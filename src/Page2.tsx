@@ -48,6 +48,7 @@ function Page2() {
 
   // Makes row in table editable
   const editDevice = (item: Device) => {
+    setDeviceEditStatus({...item});
     setEditDeviceById(Number(item.id));
   };
 
