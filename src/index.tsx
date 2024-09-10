@@ -4,9 +4,6 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Page2 from './Page2';
-import NavBar from './components/NavBar';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

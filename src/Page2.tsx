@@ -1,8 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Dispatch } from 'react';
 import './App.css';
 import { Device } from './utils/deviceType';
+import { State } from './App';
 
-function Page2() {
+type Props = {
+  setCounterStatus: React.Dispatch<React.SetStateAction<State>>;
+};
+
+const Page2: React.FC<Props> = ({ setCounterStatus }) => {
   const [deviceList, setDeviceList] = useState<Device[]>([]);
   const [filterStatus, setFilterStatus] = useState<boolean>(false);
   const [editDeviceById, setEditDeviceById] = useState<number>(0);
@@ -13,7 +18,7 @@ function Page2() {
     last_connection: "",
     status: false
   });
-
+  
   // Get all devices in IndexedDB
   const getAllData = () => {
     const idb = window.indexedDB;
@@ -28,6 +33,10 @@ function Page2() {
       deviceListRequest.onsuccess = (event: Event) => {
         const result = (event.target as IDBRequest<Device[]>).result;
         setDeviceList(result);
+        let activeCounterLength = result.filter(item => item.status === true).length
+        let inactiveCounterLength = result.filter(item => item.status === false).length
+        setCounterStatus({ activeCount: activeCounterLength, inactiveCount: inactiveCounterLength })
+    
       };
       tx.oncomplete = () => {
         db.close();
@@ -74,7 +83,7 @@ function Page2() {
         tx.oncomplete = function () {
           db.close();
         };
-        alert(`${item.name} is saved!`);
+        // alert(`${item.name} is saved!`);
         setEditDeviceById(0);
         getAllData();
       };
@@ -96,7 +105,7 @@ function Page2() {
         tx.oncomplete = function () {
           db.close();
         };
-        alert(`${item.name} is deleted!`);
+        // alert(`${item.name} is deleted!`);
         getAllData();
       };
     };
@@ -107,12 +116,11 @@ function Page2() {
   };
 
   // Filter array based on checkbox in status
-  console.log(filterStatus, editDeviceById >= 0);
   const filteredArray: Device[] = filterStatus ? deviceList.filter(item => item.status === filterStatus) : deviceList;
 
   return (
     <>
-      <h1>Page 2</h1> {editDeviceById}
+      <h1>Page 2</h1>
       <table className="table">
         <thead>
           <tr>
