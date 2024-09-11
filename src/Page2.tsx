@@ -15,11 +15,12 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
     status: false
   });
   
+
   // Get all devices in IndexedDB
   const getAllData = () => {
+
     const idb = window.indexedDB;
     const dbPromise = idb.open("malthewinje-db", 1);
-
     dbPromise.onsuccess = () => {
       const db = dbPromise.result;
       const tx = db.transaction("deviceEntity", "readonly");
@@ -44,7 +45,8 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
 
   useEffect(() => {
     if (!effectRan.current) {
-      getAllData();
+      throw new Error("SAØÆLSAØSØAD")
+      // getAllData();
     }
     return () => {
       effectRan.current = true;
@@ -117,6 +119,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
   return (
     <>
       <h1>Page 2</h1>
+
       <table className="table">
         <thead>
           <tr>
