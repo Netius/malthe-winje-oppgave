@@ -13,7 +13,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
     last_connection: "",
     status: false
   });
-  
+
 
   // Get all devices in IndexedDB
   const getAllData = () => {
@@ -31,7 +31,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
         let activeCounterLength = result.filter(item => item.status === true).length
         let inactiveCounterLength = result.filter(item => item.status === false).length
         setCounterStatus({ activeCount: activeCounterLength, inactiveCount: inactiveCounterLength })
-    
+
       };
       tx.oncomplete = () => {
         db.close();
@@ -52,8 +52,18 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
 
   // Makes row in table editable
   const editDevice = (item: Device) => {
-    setDeviceEditStatus({...item});
+    setDeviceEditStatus({ ...item });
   };
+
+  const cleanEditState = () => {
+    return setDeviceEditStatus({
+      id: 0,
+      name: "",
+      serial_number: 0,
+      last_connection: "",
+      status: false
+    });
+  }
 
   // Save changes to indexedDB
   const saveChanges = (item: Device) => {
@@ -78,15 +88,9 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
           db.close();
         };
         // alert(`${item.name} is saved!`);
-        setDeviceEditStatus({
-          id: 0,
-          name: "",
-          serial_number: 0,
-          last_connection: "",
-          status: false
-        });
         getAllData();
       };
+      cleanEditState();
     };
   };
 
@@ -108,6 +112,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
         // alert(`${item.name} is deleted!`);
         getAllData();
       };
+        cleanEditState()
     };
   };
 
@@ -190,13 +195,20 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
                   className='btn btn-primary btn-sm me-2'>
                   Edit
                 </button>
-                <button
-                  disabled={deviceEditStatus.id !== Number(item.id)}
-                  onClick={() => saveChanges(item)}
-                  className='btn btn-success btn-sm me-2'>
-                  Save
-                </button>
-                <button onClick={() => deleteDevice(item)} className='btn btn-danger btn-sm me-2'>Delete</button>
+                {deviceEditStatus.id === Number(item.id) &&
+                  <>
+                    <button
+                      onClick={() => saveChanges(item)}
+                      className='btn btn-success btn-sm me-2'>
+                      Save
+                    </button>
+
+                    <button onClick={() => deleteDevice(item)}
+                      className='btn btn-danger btn-sm me-2'>
+                      Delete
+                    </button>
+                  </>
+                }
               </td>
             </tr>
           ))}
