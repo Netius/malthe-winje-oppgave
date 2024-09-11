@@ -6,7 +6,6 @@ import { Device, Props } from './utils/deviceType';
 const Page2: React.FC<Props> = ({ setCounterStatus }) => {
   const [deviceList, setDeviceList] = useState<Device[]>([]);
   const [filterStatus, setFilterStatus] = useState<boolean>(false);
-  const [editDeviceById, setEditDeviceById] = useState<number>(0);
   const [deviceEditStatus, setDeviceEditStatus] = useState<Device>({
     id: 0,
     name: "",
@@ -18,7 +17,6 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
 
   // Get all devices in IndexedDB
   const getAllData = () => {
-
     const idb = window.indexedDB;
     const dbPromise = idb.open("malthewinje-db", 1);
     dbPromise.onsuccess = () => {
@@ -45,8 +43,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
 
   useEffect(() => {
     if (!effectRan.current) {
-      throw new Error("SAØÆLSAØSØAD")
-      // getAllData();
+      getAllData();
     }
     return () => {
       effectRan.current = true;
@@ -56,7 +53,6 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
   // Makes row in table editable
   const editDevice = (item: Device) => {
     setDeviceEditStatus({...item});
-    setEditDeviceById(Number(item.id));
   };
 
   // Save changes to indexedDB
@@ -82,7 +78,13 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
           db.close();
         };
         // alert(`${item.name} is saved!`);
-        setEditDeviceById(0);
+        setDeviceEditStatus({
+          id: 0,
+          name: "",
+          serial_number: 0,
+          last_connection: "",
+          status: false
+        });
         getAllData();
       };
     };
@@ -146,7 +148,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
               <td>
                 <input
                   type='text'
-                  disabled={editDeviceById !== Number(item.id)}
+                  disabled={deviceEditStatus.id !== Number(item.id)}
                   value={item.name}
                   maxLength={32}
                   onChange={(e) => {
@@ -158,7 +160,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
               <td>
                 <input
                   type='number'
-                  disabled={editDeviceById !== Number(item.id)}
+                  disabled={deviceEditStatus.id !== Number(item.id)}
                   value={item.serial_number}
                   maxLength={16}
                   autoFocus
@@ -173,7 +175,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
               <td>
                 <input
                   type="checkbox"
-                  disabled={editDeviceById !== Number(item.id)}
+                  disabled={deviceEditStatus.id !== Number(item.id)}
                   checked={item.status}
                   onChange={(e) => {
                     item.status = e.target.checked;
@@ -183,13 +185,13 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
               </td>
               <td>
                 <button
-                  disabled={editDeviceById !== 0}
+                  disabled={deviceEditStatus.id !== 0}
                   onClick={() => editDevice(item)}
                   className='btn btn-primary btn-sm me-2'>
                   Edit
                 </button>
                 <button
-                  disabled={editDeviceById !== Number(item.id)}
+                  disabled={deviceEditStatus.id !== Number(item.id)}
                   onClick={() => saveChanges(item)}
                   className='btn btn-success btn-sm me-2'>
                   Save
