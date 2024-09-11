@@ -125,12 +125,12 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
 
   return (
     <>
-      <h1>Page 2</h1>
+      <h1>Device Entities</h1>
+      <p>Devices stored in IndexedDB</p>
 
       <table className="table">
         <thead>
           <tr>
-            <th scope="col">Id</th>
             <th scope="col">Name</th>
             <th scope="col">Serial Number</th>
             <th scope="col">Last Connection</th>
@@ -149,7 +149,6 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
         <tbody>
           {filteredArray.map((item: Device) => (
             <tr key={item.serial_number}>
-              <td>{item.id}</td>
               <td>
                 <input
                   type='text'

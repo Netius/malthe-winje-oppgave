@@ -11,7 +11,7 @@ const NavBar: React.FC = () => {
             <Link className="nav-link" to={"/"}>Home</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to={"/page2"}>Page 2</Link>
+            <Link className="nav-link" to={"/page2"}>Device Entities</Link>
           </li>
         </ul>
       </div>

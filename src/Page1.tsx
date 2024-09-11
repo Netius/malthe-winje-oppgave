@@ -59,7 +59,8 @@ const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
 
   return (
     <>
-      <h1>Malthe Winje oppgave</h1>
+      <h1>Malthe Winje</h1>
+      <p>Initialize and create a IndexedDb with 200 entries</p>
       <button className='btn btn-primary' onClick={initializeDatabase}>Initialize database</button>
       {errorDB && <p className='alert alert-danger mt-3'>An error occurred with IndexedDB</p>}
       {connected && <p className='alert alert-success mt-3'>Database opened successfully</p>}
