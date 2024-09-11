@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { Device, Props } from './utils/deviceType';
+import moment from 'moment';
 
 
 const Page2: React.FC<Props> = ({ setCounterStatus }) => {
@@ -112,7 +113,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
         // alert(`${item.name} is deleted!`);
         getAllData();
       };
-        cleanEditState()
+      cleanEditState()
     };
   };
 
@@ -175,7 +176,17 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
                   }}
                 />
               </td>
-              <td>{item.last_connection.toString()}</td>
+              <td>
+                <input
+                  disabled={deviceEditStatus.id !== Number(item.id)}
+                  type='date'
+                  value={moment(item.last_connection).format('YYYY-MM-DD')}
+                  onChange={(e) => {
+                    item.last_connection = e.target.value
+                    setDeviceEditStatus({ ...item, last_connection: new Date(item.last_connection) })
+                  }}
+                />
+              </td>
               <td>
                 <input
                   type="checkbox"
