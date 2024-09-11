@@ -129,7 +129,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
       <h1>Device Entities</h1>
       <p>Devices stored in IndexedDB</p>
 
-      <table className="table">
+      <table className="table table-hover">
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -138,7 +138,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
             <th scope="col">
               Status
               <input
-                className='ms-2'
+                className='ms-2 form-check-input'
                 type="checkbox"
                 checked={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.checked)}
@@ -188,7 +188,12 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
                 />
               </td>
               <td>
+              {/* {item.status ? 'On' : 'Off'} */}
+              <div className="form-check form-switch">
+
                 <input
+                  className="form-check-input"
+                  role="switch"
                   type="checkbox"
                   disabled={deviceEditStatus.id !== Number(item.id)}
                   checked={item.status}
@@ -197,6 +202,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
                     setDeviceEditStatus({ ...item, status: e.target.checked })
                   }}
                 />
+                </div>
               </td>
               <td>
                 <button
