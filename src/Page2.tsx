@@ -192,19 +192,19 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
                 <button
                   disabled={deviceEditStatus.id !== 0}
                   onClick={() => editDevice(item)}
-                  className='btn btn-primary btn-sm me-2'>
+                  className='btn btn-dark btn-sm me-2'>
                   Edit
                 </button>
                 {deviceEditStatus.id === Number(item.id) &&
                   <>
                     <button
                       onClick={() => saveChanges(item)}
-                      className='btn btn-success btn-sm me-2'>
+                      className='btn btn-outline-success btn-sm me-2'>
                       Save
                     </button>
 
                     <button onClick={() => deleteDevice(item)}
-                      className='btn btn-danger btn-sm me-2'>
+                      className='btn btn-outline-danger btn-sm me-2'>
                       Delete
                     </button>
                   </>
