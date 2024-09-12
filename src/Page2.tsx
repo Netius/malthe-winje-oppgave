@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './App.css';
 import { Device, Props } from './utils/deviceType';
 import moment from 'moment';
-import { TableVirtuoso, Virtuoso, VirtuosoHandle } from 'react-virtuoso'
+import { TableVirtuoso , VirtuosoHandle } from 'react-virtuoso'
 import './TableVirtuosoStyles.css';
+import { TableDeviceFooter } from './components/TableDeviceFooter';
 
 
 const Page2: React.FC<Props> = ({ setCounterStatus }) => {
@@ -126,23 +126,22 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
   const filteredArray: Device[] = filterStatus ? deviceList.filter(item => item.status === filterStatus) : deviceList;
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
-
   return (
     <>
       <h1>Device Entities</h1>
       <p>Devices stored in IndexedDB</p>
 
-      <button className='btn btn-primary mb-3' onClick={() => virtuosoRef.current?.scrollToIndex({
+      {/* <button className='btn btn-primary mb-3' onClick={() => virtuosoRef.current?.scrollToIndex({
           index: Math.random() * deviceList.length,
           align: "start",
           behavior: "smooth"
         })}>Scroll
-      </button>
+      </button> */}
 
       <TableVirtuoso
         id="tableDeviceList"
         data={filteredArray}
-        totalCount={100}
+        fixedFooterContent={() => <TableDeviceFooter />}
         ref={virtuosoRef}
         fixedHeaderContent={() => (
           <tr className='bg-secondary text-light h6'>

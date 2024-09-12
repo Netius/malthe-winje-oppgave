@@ -1,13 +1,17 @@
 #tableDeviceList{
-  height: 600px !important;
+  height: 70vh !important;
+  border: 5px solid #f8f9fa;
+  border-radius: 10px;
 }
 
 #tableDeviceList table{
   width: 100%;
 }
 
-
 #tableDeviceList th {
   height: 50px;
   padding-left: 10px; 
+}
+#tableDeviceList tfoot{
+  bottom: -2px !important;
 }
