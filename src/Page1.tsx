@@ -5,8 +5,10 @@ import { Device, Props } from './utils/deviceType';
 const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
   const [connected, setConnected] = useState<boolean>(false);
   const [errorDB, setErrorDB] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const initializeDatabase = () => {
+    setIsLoading(true);
     // Checks if IndexedDB is in Chrome...needs support to more browser
     const idb = window.indexedDB;
 
@@ -35,7 +37,7 @@ const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
 
       // Loop to add entries in Indexed Database
       const { name, serial_number, last_connection, status } = DEVICE_ENTITY_DATA;
-      for (let index = 0; index < 200; index++) {
+      for (let index = 0; index < 50000; index++) {
         deviceEntity.add({
           name: `${name + index}`,
           serial_number: `${serial_number + index}`,
@@ -49,24 +51,26 @@ const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
         let activeCounterLength = result.filter(item => item.status === true).length
         let inactiveCounterLength = result.filter(item => item.status === false).length
         setCounterStatus({ activeCount: activeCounterLength, inactiveCount: inactiveCounterLength })
-    
+        
       };
+      setIsLoading(false)
       return tx.oncomplete;
     };
-
+    
     return;
   }
 
   return (
     <>
       <h1>Malthe Winje</h1>
-      <p>Initialize and create a IndexedDb with 200 entries</p>
-      <button className='btn btn-primary' onClick={initializeDatabase}>Initialize database</button>
+      <p>Initialize and create a IndexedDb with 50000 entries</p>
+      <button className='btn btn-primary' onClick={initializeDatabase}>
+        Initialize database {isLoading &&  <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>}
+      </button>
       {errorDB && <p className='alert alert-danger mt-3'>An error occurred with IndexedDB</p>}
       {connected && <p className='alert alert-success mt-3'>Database opened successfully</p>}
     </>
   )
 }
-
 export default Page1;
 

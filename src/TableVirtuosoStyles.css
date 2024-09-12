@@ -1,0 +1,13 @@
+#tableDeviceList{
+  height: 600px !important;
+}
+
+#tableDeviceList table{
+  width: 100%;
+}
+
+
+#tableDeviceList th {
+  height: 50px;
+  padding-left: 10px; 
+}
