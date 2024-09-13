@@ -3,14 +3,27 @@ import { TableDeviceFooter } from './TableDeviceFooter';
 import { TableVirtuoso } from 'react-virtuoso';
 import { Device, emptyDeviceEntity } from '../../utils/deviceType';
 import moment from 'moment';
+import { ButtonEditDevice } from './ButtonEditDevice';
+import { ButtonSaveDevice } from './ButtonSaveDevice';
+import { ButtonDeleteDevice } from './ButtonDeleteDevice';
 
 interface ChildProps {
   deviceList: Device[];
+  handleGetAllData: () => void
 }
 
-export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList }) => {
+export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList , handleGetAllData }) => {
   const [filterStatus, setFilterStatus] = useState<boolean>(false);
   const [deviceEditStatus, setDeviceEditStatus] = useState<Device>(emptyDeviceEntity);
+
+  const handlerSetDeviceState = (item : Device) : Device => {
+    setDeviceEditStatus({...item})
+    return item;
+  }
+
+  const limitInputLength = (e: React.ChangeEvent<HTMLInputElement>): boolean => {
+    return e.target.value.length >= 16;
+  };
 
   const filteredArray: Device[] = filterStatus ? deviceList.filter(item => item.status === filterStatus) : deviceList;
 
@@ -37,7 +50,7 @@ export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList }) => {
           <th style={{ width: "185px" }}></th>
         </tr>
       )}
-      itemContent={(index, item) => (
+      itemContent={(_, item) => (
         <>
           <td>
             <input
@@ -61,7 +74,7 @@ export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList }) => {
               maxLength={16}
               autoFocus
               onChange={(e) => {
-                // if (limitInputLength(e)) return;
+                if (limitInputLength(e)) return;
                 item.serial_number = Number(e.target.value);
                 setDeviceEditStatus({ ...item, serial_number: Number(e.target.value) });
               }}
@@ -93,27 +106,17 @@ export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList }) => {
               />
             </div>
           </td>
-          {/* <td>
-            <button
-              disabled={deviceEditStatus.id !== 0}
-              onClick={() => editDevice(item)}
-              className='btn btn-dark btn-sm me-2 mt-1 float-end'>
-              Edit
-            </button>
+          <td>
+            <ButtonEditDevice handlerSetDeviceState={handlerSetDeviceState} item={item} handleGetAllData={handleGetAllData}/>
             {deviceEditStatus.id === Number(item.id) &&
               <>
-                <button
-                  onClick={() => saveChanges(item)}
-                  className='btn btn-outline-success btn-sm me-2 mt-1'>
-                  Save
-                </button>
-                <button onClick={() => deleteDevice(item)}
-                  className='btn btn-outline-danger btn-sm me-2 mt-1'>
-                  Delete
-                </button>
+              <ButtonSaveDevice handlerSetDeviceState={handlerSetDeviceState} item={item} handleGetAllData={handleGetAllData}/>     
+              <ButtonDeleteDevice handlerSetDeviceState={handlerSetDeviceState} item={item} handleGetAllData={handleGetAllData} />     
               </>
             }
-          </td> */}
+            
+          
+          </td>
 
         </>
       )}

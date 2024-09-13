@@ -11,6 +11,15 @@ export interface State {
   inactiveCount: number,
 }
 
+export interface DeviceState {
+  deviceState: Device,
+}
+export interface HandleDeviceState{
+  handlerSetDeviceState: (item: Device) => Device
+  item: Device
+  handleGetAllData: () => void
+}
+
 export type Props = {
   setCounterStatus: React.Dispatch<React.SetStateAction<State>>;
 };
