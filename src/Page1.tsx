@@ -2,13 +2,28 @@ import { useState } from 'react';
 import DEVICE_ENTITY_DATA from './data/DEVICE_ENTITY_DATA';
 import { Device, Props } from './utils/deviceType';
 
+type ErrorMessage = {
+  isError: boolean;
+  message: string;
+}
+
+type SuccessMessage = {
+  isSuccess: boolean;
+  message: string;
+}
+
+type LoadingSpinner = {
+  creating: boolean;
+  deleting: boolean;
+}
+
 const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
-  const [connected, setConnected] = useState<boolean>(false);
-  const [errorDB, setErrorDB] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<SuccessMessage>({isSuccess:false, message: ""});
+  const [isError, setIsError] = useState<ErrorMessage>({isError:false, message: ""});
+  const [isLoading, setIsLoading] = useState<LoadingSpinner>({creating:false, deleting:false});
 
   const initializeDatabase = () => {
-    setIsLoading(true);
+    setIsLoading({...isLoading, creating: true});
     // Checks if IndexedDB is in Chrome...needs support to more browser
     const idb = window.indexedDB;
 
@@ -17,8 +32,9 @@ const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
 
     // Return error 
     request.onerror = function (event: Event) {
-      setErrorDB(true);
-      console.error("An error occurred with IndexedDB : ", event);
+      setIsError({isError:true, message: `An error occurred with IndexedDB ${event}`});
+      setIsLoading({...isLoading, creating: false});
+      
     };
 
     // Create IndexedDB if not present
@@ -27,17 +43,18 @@ const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
       if (!db.objectStoreNames.contains("deviceEntity")) {
         const objectStore: IDBObjectStore = db.createObjectStore("deviceEntity", { keyPath: "id", autoIncrement: true });
       }
+      setIsLoading({...isLoading, creating: false});
     };
 
     request.onsuccess = function () {
-      setConnected(true);
+      setIsSuccess({isSuccess: true, message: "Database created successful"});
       const db: IDBDatabase = request.result;
       const tx: IDBTransaction = db.transaction("deviceEntity", "readwrite");
       const deviceEntity: IDBObjectStore = tx.objectStore("deviceEntity");
 
       // Loop to add entries in Indexed Database
       const { name, serial_number, last_connection, status } = DEVICE_ENTITY_DATA;
-      for (let index = 0; index < 150000; index++) {
+      for (let index = 0; index < 100000; index++) {
         deviceEntity.add({
           name: `${name + index}`,
           serial_number: `${serial_number + index}`,
@@ -53,22 +70,44 @@ const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
         setCounterStatus({ activeCount: activeCounterLength, inactiveCount: inactiveCounterLength })
         
       };
-      setIsLoading(false)
+      setIsLoading({...isLoading, creating: false});
       return tx.oncomplete;
     };
     
     return;
   }
 
+  const deleteIndexedDb = () => {
+    setIsLoading({...isLoading, deleting: true});
+      // Checks if IndexedDB is in Chrome...needs support to more browser
+    const idb = window.indexedDB;
+
+    const request: IDBOpenDBRequest = idb.deleteDatabase("malthewinje-db");
+
+    request.onerror = function(event: Event) {
+       setIsError({isError: true, message: `Error while deleting database: ${event}`});
+       setIsLoading({...isLoading, deleting: false});
+    };
+
+    request.onsuccess = function(event: Event) {
+       setIsSuccess({isSuccess: true, message:`Success while deleting database.${event}`});
+       setIsLoading({...isLoading, deleting: false});
+    };
+
+  }
+
   return (
     <>
       <h1>Malthe Winje</h1>
-      <p>Initialize and create a IndexedDb with 50000 entries</p>
+      <p>Initialize and create a IndexedDb with 150000 entries</p>
       <button className='btn btn-primary' onClick={initializeDatabase}>
-        Initialize database {isLoading &&  <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>}
+        Initialize database {isLoading.creating &&  <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>}
       </button>
-      {errorDB && <p className='alert alert-danger mt-3'>An error occurred with IndexedDB</p>}
-      {connected && <p className='alert alert-success mt-3'>Database opened successfully</p>}
+      <button className='btn btn-danger ms-3' onClick={deleteIndexedDb}>
+        Delete database {isLoading.deleting &&  <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>}
+      </button>
+      {isError.isError && <p className='alert alert-danger mt-3'>{isError.message}</p>}
+      {isSuccess.isSuccess && <p className='alert alert-success mt-3'>{isSuccess.message}</p>}
     </>
   )
 }
