@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import DEVICE_ENTITY_DATA from './data/DEVICE_ENTITY_DATA';
 import { Device, Props } from './utils/deviceType';
+import { SuccessMessages } from './components/AlertMessages/SuccessMessages';
 
 type ErrorMessage = {
   isError: boolean;
@@ -106,6 +107,7 @@ const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
       <button className='btn btn-danger ms-3' onClick={deleteIndexedDb}>
         Delete database {isLoading.deleting &&  <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>}
       </button>
+      {/* <SuccessMessages isSuccess={{...isSuccess}} /> */}
       {isError.isError && <p className='alert alert-danger mt-3'>{isError.message}</p>}
       {isSuccess.isSuccess && <p className='alert alert-success mt-3'>{isSuccess.message}</p>}
     </>
