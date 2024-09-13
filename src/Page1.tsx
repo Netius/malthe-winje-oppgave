@@ -37,7 +37,7 @@ const Page1 : React.FC<Props> = ({ setCounterStatus }) => {
 
       // Loop to add entries in Indexed Database
       const { name, serial_number, last_connection, status } = DEVICE_ENTITY_DATA;
-      for (let index = 0; index < 50000; index++) {
+      for (let index = 0; index < 150000; index++) {
         deviceEntity.add({
           name: `${name + index}`,
           serial_number: `${serial_number + index}`,

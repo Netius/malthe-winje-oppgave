@@ -14,3 +14,11 @@ export interface State {
 export type Props = {
   setCounterStatus: React.Dispatch<React.SetStateAction<State>>;
 };
+
+export const emptyDeviceEntity : Device = {
+  id: 0,
+  name: "",
+  serial_number: 0,
+  last_connection: "",
+  status: false
+}
