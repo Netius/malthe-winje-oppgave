@@ -6,6 +6,10 @@ import moment from 'moment';
 import { ButtonEditDevice } from './ButtonEditDevice';
 import { ButtonSaveDevice } from './ButtonSaveDevice';
 import { ButtonDeleteDevice } from './ButtonDeleteDevice';
+import {useDispatch, useSelector} from "react-redux";
+import { editTask } from '../../utils/taskActions';
+
+
 
 interface ChildProps {
   deviceList: Device[];
@@ -15,6 +19,10 @@ interface ChildProps {
 export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList , handleGetAllData }) => {
   const [filterStatus, setFilterStatus] = useState<boolean>(false);
   const [deviceEditStatus, setDeviceEditStatus] = useState<Device>(emptyDeviceEntity);
+
+  const dispatch = useDispatch();
+  const editDevice = useSelector(state => state.id)
+
 
   const handlerSetDeviceState = (item : Device) : Device => {
     setDeviceEditStatus({...item})
@@ -107,6 +115,7 @@ export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList , handleG
             </div>
           </td>
           <td>
+            <button onClick={() => dispatch(editTask(item))} >Edit</button>
             <ButtonEditDevice handlerSetDeviceState={handlerSetDeviceState} item={item} handleGetAllData={handleGetAllData}/>
             {deviceEditStatus.id === Number(item.id) &&
               <>

@@ -1,16 +1,15 @@
 
+import { emptyDeviceEntity } from "./deviceType";
 import {EDIT_TASK, DELETE_TASK, SAVE_TASK} from "./taskActionTypes";
 
 const initialState = {
-  tasks: [],
-  taskTitle: "",
-  taskDescription: ""
+  ...emptyDeviceEntity
 };
 
 const taskReducer = (state = initialState, action:any) => {
   switch (action.type) {
       case EDIT_TASK:
-        console.log("EDIT_TASK")
+        console.log("EDIT_TASK",state,  action.payload)
           return {
               ...state,
               // tasks: [...state.tasks, action.payload],

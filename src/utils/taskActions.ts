@@ -1,9 +1,9 @@
 import {EDIT_TASK, DELETE_TASK, SAVE_TASK} from "./taskActionTypes";
 
-export const editTask = (task : any) => {
+export const editTask = (value : any) => {
     return {
         type: EDIT_TASK,
-        payload: task,
+        payload: value,
     };
 };
 
