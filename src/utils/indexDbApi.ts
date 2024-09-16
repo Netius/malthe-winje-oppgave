@@ -45,25 +45,27 @@ export const saveDevice = (device: Device) => {
 };
 
  // Get all devices in IndexedDB
- const getAllData = () => {
-  const idb = window.indexedDB;
-  const dbPromise = idb.open("malthewinje-db", 1);
-  dbPromise.onsuccess = () => {
-    const db = dbPromise.result;
-    const tx = db.transaction("deviceEntity", "readonly");
-    const deviceEntity = tx.objectStore("deviceEntity");
-    const deviceListRequest = deviceEntity.getAll();
-
-    deviceListRequest.onsuccess = (event: Event) => {
-      const result = (event.target as IDBRequest<Device[]>).result;
-      // setDeviceList(result);
-      let activeCounterLength = result.filter(item => item.status === true).length
-      let inactiveCounterLength = result.filter(item => item.status === false).length
-      // setCounterStatus({ activeCount: activeCounterLength, inactiveCount: inactiveCounterLength })
-      return result;
+ export const getAllsData = () => {
+  return new Promise((RESOLVE, REJECT) => {
+    const idb = window.indexedDB;
+    const dbPromise = idb.open("malthewinje-db", 1);
+    dbPromise.onsuccess = () => {
+      const db = dbPromise.result;
+      const tx = db.transaction("deviceEntity", "readonly");
+      const deviceEntity = tx.objectStore("deviceEntity");
+      const deviceListRequest = deviceEntity.getAll();
+  
+      deviceListRequest.onsuccess = (event: Event) => {
+        const result : Device[] = (event.target as IDBRequest<Device[]>).result;
+        // let activeCounterLength = result.filter(item => item.status === true).length
+        // let inactiveCounterLength = result.filter(item => item.status === false).length
+        // setCounterStatus({ activeCount: activeCounterLength, inactiveCount: inactiveCounterLength })
+        RESOLVE(result);
+      };
+      tx.oncomplete = () => {
+        db.close();
+      };
     };
-    tx.oncomplete = () => {
-      db.close();
-    };
-  };
+  })
+  
 };

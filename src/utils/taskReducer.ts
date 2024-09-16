@@ -20,7 +20,6 @@ const taskReducer = (state = initialState, action: any) => {
       };
 
     case SAVE_DEVICE:
-      console.log(action.payload)
       saveDevice(action.payload);
       return {
         ...emptyDeviceEntity,
