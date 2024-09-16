@@ -1,3 +1,3 @@
-export const EDIT_TASK = "EDIT_TASK";
-export const SAVE_TASK = "SAVE_TASK";
-export const DELETE_TASK = "DELETE_TASK";
+export const EDIT_DEVICE = "EDIT_DEVICE";
+export const SAVE_DEVICE = "SAVE_DEVICE";
+export const DELETE_DEVICE = "DELETE_DEVICE";

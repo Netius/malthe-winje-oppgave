@@ -1,22 +1,22 @@
-import {EDIT_TASK, DELETE_TASK, SAVE_TASK} from "./taskActionTypes";
+import {EDIT_DEVICE, DELETE_DEVICE, SAVE_DEVICE} from "./taskActionTypes";
 
-export const editTask = (value : any) => {
+export const editDevice = (value : any) => {
     return {
-        type: EDIT_TASK,
+        type: EDIT_DEVICE,
         payload: value,
     };
 };
 
-export const saveTask = (value:any) => {
+export const saveDevice = (value:any) => {
     return {
-        type: SAVE_TASK,
+        type: SAVE_DEVICE,
         payload: value,
     };
 };
 
-export const deleteTask = (value : any) => {
+export const deleteDevice = (value : any) => {
     return {
-        type: DELETE_TASK,
+        type: DELETE_DEVICE,
         payload: value,
     };
 };

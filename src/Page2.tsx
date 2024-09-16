@@ -51,7 +51,7 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
       <h1>Device Entities</h1>
       <p>Devices stored in IndexedDB</p>
       
-      <TableDeviceVirtuoso deviceList={deviceList} handleGetAllData={handleGetAllData} />
+      <TableDeviceVirtuoso deviceList={deviceList} />
 
       {/* <button className='btn btn-primary mb-3' onClick={() => virtuosoRef.current?.scrollToIndex({
           index: Math.random() * deviceList.length,
