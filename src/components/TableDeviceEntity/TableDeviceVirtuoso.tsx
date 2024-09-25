@@ -11,10 +11,9 @@ import { RootState } from '../../utils/rootReducer';
 
 interface ChildProps {
   deviceList: Device[];
-  handleGetAllData: () => void
 }
 
-export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList, handleGetAllData }) => {
+export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList }) => {
   const [filterStatus, setFilterStatus] = useState<boolean>(false);
   const editDev: Device = useSelector<RootState, Device>(state => state.device)
 

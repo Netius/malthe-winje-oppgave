@@ -8,39 +8,11 @@ import { getAllsData } from './utils/indexDbApi';
 const Page2: React.FC<Props> = ({ setCounterStatus }) => {
   const [deviceList, setDeviceList] = useState<Device[]>([]);
 
-  // Get all devices in IndexedDB
-  const getAllData = () => {
-    const idb = window.indexedDB;
-    const dbPromise = idb.open("malthewinje-db", 1);
-    dbPromise.onsuccess = () => {
-      const db = dbPromise.result;
-      const tx = db.transaction("deviceEntity", "readonly");
-      const deviceEntity = tx.objectStore("deviceEntity");
-      const deviceListRequest = deviceEntity.getAll();
-
-      deviceListRequest.onsuccess = (event: Event) => {
-        const result = (event.target as IDBRequest<Device[]>).result;
-        setDeviceList(result);
-        let activeCounterLength = result.filter(item => item.status === true).length
-        let inactiveCounterLength = result.filter(item => item.status === false).length
-        setCounterStatus({ activeCount: activeCounterLength, inactiveCount: inactiveCounterLength })
-
-      };
-      tx.oncomplete = () => {
-        db.close();
-      };
-    };
-  };
-
-  const handleGetAllData = () => {
-    getAllsData().then((result : any) => setDeviceList(result));
-  }
 
   const effectRan = useRef<boolean>(false);
   useEffect(() => {
     
     if (!effectRan.current) {
-     // getAllData();
       getAllsData().then((result : any) => setDeviceList(result));
     }
     return () => {
@@ -49,12 +21,13 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
   }, []);
 
   const virtuosoRef = useRef<VirtuosoHandle>(null);
+  
   return (
     <>
       <h1>Device Entities</h1>
       <p>Devices stored in IndexedDB</p>
       
-      <TableDeviceVirtuoso deviceList={deviceList}  handleGetAllData={handleGetAllData}/>
+      <TableDeviceVirtuoso deviceList={deviceList} />
 
       {/* <button className='btn btn-primary mb-3' onClick={() => virtuosoRef.current?.scrollToIndex({
           index: Math.random() * deviceList.length,
