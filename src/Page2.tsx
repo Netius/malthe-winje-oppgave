@@ -13,7 +13,13 @@ const Page2: React.FC<Props> = ({ setCounterStatus }) => {
   useEffect(() => {
     
     if (!effectRan.current) {
-      getAllsData().then((result : any) => setDeviceList(result));
+      getAllsData().then((result : any ) => {
+        setDeviceList(result)
+        let activeCounterLength = result.filter((item:Device)  => item.status === true).length
+        let inactiveCounterLength = result.filter((item: Device) => item.status === false).length
+        setCounterStatus({ activeCount: activeCounterLength, inactiveCount: inactiveCounterLength })
+      });
+     
     }
     return () => {
       effectRan.current = true;

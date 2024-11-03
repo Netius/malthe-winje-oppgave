@@ -1,4 +1,4 @@
-import {EDIT_DEVICE, DELETE_DEVICE, SAVE_DEVICE} from "./taskActionTypes";
+import {EDIT_DEVICE, DELETE_DEVICE, SAVE_DEVICE, CANCEL_DEVICE} from "./taskActionTypes";
 
 export const editDevice = (value : any) => {
     return {
@@ -17,6 +17,13 @@ export const saveDevice = (value:any) => {
 export const deleteDevice = (value : any) => {
     return {
         type: DELETE_DEVICE,
+        payload: value,
+    };
+};
+
+export const cancelDevice = (value : any) => {
+    return {
+        type: CANCEL_DEVICE,
         payload: value,
     };
 };

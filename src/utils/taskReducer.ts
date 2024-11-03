@@ -1,7 +1,7 @@
 
 import {  emptyDeviceEntity } from "./deviceType";
 import { deleteDevice, saveDevice } from "./indexDbApi";
-import { EDIT_DEVICE, DELETE_DEVICE, SAVE_DEVICE } from "./taskActionTypes";
+import { EDIT_DEVICE, DELETE_DEVICE, SAVE_DEVICE, CANCEL_DEVICE } from "./taskActionTypes";
 
 const initialState = {
   ...emptyDeviceEntity
@@ -29,6 +29,11 @@ const taskReducer = (state = initialState, action: any) => {
       return {
         ...emptyDeviceEntity
       }
+    case CANCEL_DEVICE:
+      return {
+        ...emptyDeviceEntity
+      }
+
     default:
       return state;
   }

@@ -4,7 +4,7 @@ import { TableVirtuoso } from 'react-virtuoso';
 import { Device } from '../../utils/deviceType';
 import moment from 'moment';
 import { useDispatch, useSelector } from "react-redux";
-import { editDevice, saveDevice, deleteDevice } from '../../utils/taskActions';
+import { editDevice, saveDevice, deleteDevice, cancelDevice } from '../../utils/taskActions';
 import { RootState } from '../../utils/rootReducer';
 
 
@@ -15,7 +15,7 @@ interface ChildProps {
 
 export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList }) => {
   const [filterStatus, setFilterStatus] = useState<boolean>(false);
-  const editDev: Device = useSelector<RootState, Device>(state => state.device)
+  let editDev: Device = useSelector<RootState, Device>(state => state.device)
 
   const dispatch = useDispatch();
 
@@ -108,10 +108,12 @@ export const TableDeviceVirtuoso: React.FC<ChildProps> = ({ deviceList }) => {
             </td>
             <td>
               <button onClick={() => dispatch(editDevice(item))} className='btn btn-dark btn-sm me-2 mt-1 float-end' >Edit</button>
+              
               {editDev.id === Number(item.id) &&
                 <>
                   <button onClick={() => dispatch(saveDevice(editDev))} className='btn btn-success btn-sm me-2 mt-1'>Save</button>
                   <button onClick={() => dispatch(deleteDevice(editDev))} className='btn btn-outline-danger btn-sm me-2 mt-1' >Delete</button>
+                  <button onClick={() => dispatch(cancelDevice(editDev)) } className='btn btn-outline-secondary btn-sm me-2 mt-1'>Avbryt</button>
                 </>
               }
             </td>
